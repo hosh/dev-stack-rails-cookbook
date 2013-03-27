@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: dev-stack-rails
-# Recipe:: default
+# Recipe:: postgresql
 #
 # Copyright (C) 2013 Ho-Sheng Hsiao
 #
@@ -20,6 +20,37 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+include_recipe 'postgresql::server'
+include_recipe 'database::postgresql'
 
-include_recipe 'dev-stack-rails::postgresql'
-include_recipe 'dev-stack-rails::ruby'
+# The PostgreSQL admin password is automatically created in the server cookbook
+admin_password = node['postgresql']['password']['postgres']
+
+admin_credentials = {
+  :username => 'postgres',
+  :password => admin_password
+}
+
+Chef::Log.info('Setting up PostgreSQL for Rails')
+
+postgresql = node['dev-stack']['rails']['postgresql']
+
+postgresql_database_user postgresql['username'] do
+  Chef::Log.info("Creating PostgreSQL user: #{postgresql['username']}")
+  connection admin_credentials
+
+  password   postgresql['password']
+  action     :create
+end
+
+postgresql_database postgresql['dbname'] do
+  Chef::Log.info("Creating PostgreSQL Database: #{postgresql['dbname']}")
+  connection admin_credentials
+
+  owner      postgresql['username']
+  encoding   postgresql['encoding']
+  template   postgresql['template']
+  action     :create
+end
+
+

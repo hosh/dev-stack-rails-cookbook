@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: dev-stack-rails
-# Recipe:: default
+# Recipe:: ruby
 #
 # Copyright (C) 2013 Ho-Sheng Hsiao
 #
@@ -20,6 +20,14 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Ruby 1.9.3 is a good enough default for now
+# TODO: Make this overridable for people to tweak from Vagrant or from dev-stack.json (or something)
 
-include_recipe 'dev-stack-rails::postgresql'
-include_recipe 'dev-stack-rails::ruby'
+include_recipe "rbenv::default"
+include_recipe "rbenv::ruby_build"
+
+rbenv_ruby "1.9.3-p362"
+
+rbenv_gem "bundler" do
+  ruby_version "1.9.3-p362"
+end
