@@ -26,9 +26,46 @@
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 
-ruby_version = node['dev-stack']['rails']['version']
+ruby_version      = node['dev-stack']['rails']['version']
+ruby_cache_dir    = node['dev-stack']['cache_dir']
+ruby_cached_build = "#{ruby_cache_dir}/ruby-#{ruby_version}.tar.bz2"
+rbenv_root        = "#{node['rbenv']['install_prefix']}/rbenv"
+rbenv_versions    = "#{rbenv_root}/versions"
 
-rbenv_ruby ruby_version
+if File.exists?(ruby_cached_build)
+  Chef::Log.info "Cached ruby detected #{ruby_cached_build}, skipping build"
+
+  directory rbenv_versions do
+    user      'rbenv'
+    group     'rbenv'
+    mode      '00755'
+    recursive true
+  end
+
+  execute "tar -jxvpf #{ruby_cached_build} --same-owner" do
+    cwd   rbenv_versions
+    user  'root'
+    group 'root'
+  end
+else
+  Chef::Log.info "No cached build for #{ruby_version}. Building from scratch ..."
+  # Build from scratch
+  rbenv_ruby ruby_version
+
+  Chef::Log.info "Caching ruby build to #{ruby_cached_build}"
+  directory ruby_cache_dir do
+    user      'vagrant'
+    group     'vagrant'
+    mode      '00755'
+    recursive true
+  end
+
+  execute "tar -jcvpsf #{ruby_cached_build} --same-owner #{ruby_version}" do
+    cwd   rbenv_versions
+    user  'root'
+    group 'root'
+  end
+end
 
 rbenv_gem "bundler" do
   ruby_version ruby_version
