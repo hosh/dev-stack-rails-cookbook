@@ -43,8 +43,9 @@ postgresql_database_user postgresql['username'] do
   action     :create
 end
 
-postgresql_database postgresql['dbname'] do
-  Chef::Log.info("Creating PostgreSQL Database: #{postgresql['dbname']}")
+# Development database
+postgresql_database postgresql['development_name'] do
+  Chef::Log.info("Creating PostgreSQL Database: #{postgresql['development_name']}")
   connection admin_credentials
 
   owner      postgresql['username']
@@ -52,5 +53,16 @@ postgresql_database postgresql['dbname'] do
   template   postgresql['template']
   action     :create
 end
+
+postgresql_database postgresql['test_name'] do
+  Chef::Log.info("Creating PostgreSQL Database: #{postgresql['test_name']}")
+  connection admin_credentials
+
+  owner      postgresql['username']
+  encoding   postgresql['encoding']
+  template   postgresql['template']
+  action     :create
+end
+
 
 
