@@ -31,14 +31,14 @@ rbenv_binary_path = "#{rbenv_root}/bin/rbenv"
 ruby_version      = node['dev-stack']['rails']['verison']
 
 # Make sure rbenv dotfile is in the application root.
-file "#{rails_root}/.ruby-version" do
-  owner   'vagrant'
-  group   'vagrant'
-  mode    '0755'
-  content ruby_version
+#file "#{rails_root}/.ruby-version" do
+#  owner   'vagrant'
+#  group   'vagrant'
+#  mode    '0755'
+#  content ruby_version
 
-  action :create
-end
+#  action :create
+#end
 
 # bundle install
 # We have to explicitly be running under the rbenv user

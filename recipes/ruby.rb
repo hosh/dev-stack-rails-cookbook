@@ -70,3 +70,12 @@ end
 rbenv_gem "bundler" do
   ruby_version ruby_version
 end
+
+# Set the global version of ruby
+execute "#{rbenv_binary_path} global #{ruby_version}" do
+  environment({ 'HOME' => '/home/vagrant', 'RBENV_ROOT' => rbenv_root })
+
+  cwd    rbenv_root
+  user   'rbenv'
+  group  'rbenv'
+end
