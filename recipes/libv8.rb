@@ -1,6 +1,7 @@
+
 #
 # Cookbook Name:: dev-stack-rails
-# Recipe:: rails
+# Recipe:: libv8
 #
 # Copyright (C) 2013 Ho-Sheng Hsiao
 #
@@ -20,38 +21,8 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-# Ruby 1.9.3 is a good enough default for now
-# TODO: Make this overridable for people to tweak from Vagrant or from dev-stack.json (or something)
 
-include_recipe 'dev-stack-rails::ruby'
-include_recipe 'dev-stack-rails::libv8'
+# If you are using Rails 3.2+ with Asset Pipeline enabled, you need a Javascript engine
 
-rails_root        = node['dev-stack']['app']['root_dir']
-rbenv_root        = "#{node['rbenv']['install_prefix']}/rbenv"
-rbenv_binary_path = "#{rbenv_root}/bin/rbenv"
-ruby_version      = node['dev-stack']['rails']['verison']
-
-# Make sure rbenv dotfile is in the application root.
-#file "#{rails_root}/.ruby-version" do
-#  owner   'vagrant'
-#  group   'vagrant'
-#  mode    '0755'
-#  content ruby_version
-
-#  action :create
-#end
-
-# bundle install
-# We have to explicitly be running under the rbenv user
-# TODO: Move this into a LWRP
-execute "#{rbenv_binary_path} exec bundle install" do
-  environment({ 'HOME' => '/home/vagrant', 'RBENV_ROOT' => rbenv_root })
-
-  cwd    rails_root
-  user   'rbenv'
-  group  'rbenv'
-
-  action :run
-end
-
+package 'libv8-dev'
 
