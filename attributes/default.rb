@@ -1,5 +1,15 @@
 
 default['dev-stack']['app']['root_dir'] = '/vagrant'
+default['dev-stack']['app']['fqdn'] = 'rails.dev'
+
+# This is used in the upstream in the nginx config. It assumes the default Rails port of 4000
+default['dev-stack']['nginx']['rails_upstream'] = 'localhost:3000'
+
+# If you are using unicorn, then you need to set it to something like
+# You don't need to uncomment this. Set this in the Vagrantfile to override
+# the default.
+# default['dev-stack']['nginx']['rails_upstream'] = "unix:/vagrant/tmp/sockets/unicorn.sock"
+
 default['dev-stack']['rails']['version'] = '1.9.3-p362'
 
 # For building or caching datasets

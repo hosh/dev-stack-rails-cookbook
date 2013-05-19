@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: dev-stack-rails
-# Recipe:: default
+# Recipe:: nginx
 #
 # Copyright (C) 2013 Ho-Sheng Hsiao
 #
@@ -20,7 +20,17 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Ruby 1.9.3 is a good enough default for now
 
-include_recipe 'dev-stack-rails::nginx'
-include_recipe 'dev-stack-rails::postgresql'
-include_recipe 'dev-stack-rails::rails'
+# We are running this inside Ubuntu 12.04
+include_recipe "nginx::default"
+
+# To customize your own, you can use nginx::source or use your own vhosts
+template "#{node['nginx']['dir']}/sites-available/rails.conf" do
+  source "nginx/rails.conf.erb"
+  mode "644"
+end
+
+nginx_site 'rails.conf', :enable => true
+
+
