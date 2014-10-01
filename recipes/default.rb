@@ -21,7 +21,6 @@
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-include_recipe 'dev-stack-rails::ruby'
 include_recipe 'dev-stack-rails::nginx'
 include_recipe 'dev-stack-rails::postgresql'
 include_recipe 'dev-stack-rails::rails'

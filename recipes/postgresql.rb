@@ -35,12 +35,70 @@ Chef::Log.info('Setting up PostgreSQL for Rails')
 
 postgresql = node['dev-stack']['rails']['postgresql']
 
+# Ubuntu installs postgresql in a broken way. We want
+# template1 to be UTF-8. This changes the template without
+# blowing away the existing servers, and will ensure template1
+# is UTF-8 on non-Ubuntu systems
+# https://gist.github.com/anandology/5949798
+
+execute "psql template1 -c \"UPDATE pg_database SET datallowconn = TRUE WHERE datname='template0'\"" do
+  user 'postgres'
+end
+
+execute "psql template0 -c \"UPDATE pg_database SET datistemplate = FALSE WHERE datname='template1'\"" do
+  user 'postgres'
+end
+
+execute "dropdb template1" do
+  user 'postgres'
+end
+
+execute "createdb template1 -T template0 -E utf-8" do
+  user 'postgres'
+end
+
+execute "psql template0 -c \"UPDATE pg_database SET datistemplate = TRUE WHERE datname='template1'\"" do
+  user 'postgres'
+end
+
+execute "psql template1 -c \"UPDATE pg_database SET datallowconn = FALSE WHERE datname='template0'\"" do
+  user 'postgres'
+end
+
+# Use Postgresql tools directly to create superusers
+execute "createuser -s vagrant -U postgres"
+execute "createuser -s #{postgresql['username']} -U postgres"
+
+# TODO: this would have to be written for production
+if false
+# Wrap this in a "if dev" mode or something
+postgresql_database_user 'vagrant' do
+  Chef::Log.info("Creating PostgreSQL user: vagrant")
+  connection admin_credentials
+
+  password   'vagrant'
+  action     :create
+end
+postgresql_database_user 'vagrant' do
+  Chef::Log.info("Granting superuser privs: vagrant")
+  connection admin_credentials
+  password   postgresql['password']
+  action     :grant
+end
+
 postgresql_database_user postgresql['username'] do
   Chef::Log.info("Creating PostgreSQL user: #{postgresql['username']}")
   connection admin_credentials
-
   password   postgresql['password']
   action     :create
+end
+
+postgresql_database_user postgresql['username'] do
+  Chef::Log.info("Granting superuser privs: #{postgresql['username']}")
+  connection admin_credentials
+  password   postgresql['password']
+  action     :grant
+end
 end
 
 # Development database
