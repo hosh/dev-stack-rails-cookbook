@@ -10,7 +10,7 @@ default['dev-stack']['nginx']['rails_upstream'] = 'localhost:3000'
 # the default.
 # default['dev-stack']['nginx']['rails_upstream'] = "unix:/vagrant/tmp/sockets/unicorn.sock"
 
-default['dev-stack']['rails']['version'] = '1.9.3-p362'
+default['dev-stack']['rails']['version'] = '1.9.3-p547'
 
 # For building or caching datasets
 default['dev-stack']['cache_dir'] = '/vagrant/.vagrant/cache'
@@ -19,5 +19,5 @@ default['dev-stack']['rails']['postgresql']['development_name']   = 'dev-stack-d
 default['dev-stack']['rails']['postgresql']['test_name']          = 'dev-stack-test'
 default['dev-stack']['rails']['postgresql']['username'] = 'vagrant'
 default['dev-stack']['rails']['postgresql']['password'] = 'vagrant'
-default['dev-stack']['rails']['postgresql']['template'] = 'template1'
+default['dev-stack']['rails']['postgresql']['template'] = 'template0'
 default['dev-stack']['rails']['postgresql']['encoding'] = 'UTF8'

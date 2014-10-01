@@ -27,31 +27,8 @@ include_recipe 'dev-stack-rails::ruby'
 include_recipe 'dev-stack-rails::libv8'
 
 rails_root        = node['dev-stack']['app']['root_dir']
-rbenv_root        = "#{node['rbenv']['install_prefix']}/rbenv"
-rbenv_binary_path = "#{rbenv_root}/bin/rbenv"
-ruby_version      = node['dev-stack']['rails']['verison']
-
-# Make sure rbenv dotfile is in the application root.
-#file "#{rails_root}/.ruby-version" do
-#  owner   'vagrant'
-#  group   'vagrant'
-#  mode    '0755'
-#  content ruby_version
-
-#  action :create
-#end
 
 # bundle install
-# We have to explicitly be running under the rbenv user
-# TODO: Move this into a LWRP
-execute "#{rbenv_binary_path} exec bundle install" do
-  environment({ 'HOME' => '/home/vagrant', 'RBENV_ROOT' => rbenv_root })
-
-  cwd    rails_root
-  user   'rbenv'
-  group  'rbenv'
-
-  action :run
-end
+# rbenv_command "exec bundle install", cwd: rails_root
 
 

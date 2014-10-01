@@ -21,8 +21,8 @@
 # CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 # OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Ruby 1.9.3 is a good enough default for now
-# TODO: Make this overridable for people to tweak from Vagrant or from dev-stack.json (or something)
 
+Chef::Log.info "Setting up rbenv"
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 
@@ -72,10 +72,13 @@ rbenv_gem "bundler" do
 end
 
 # Set the global version of ruby
-execute "#{rbenv_binary_path} global #{ruby_version}" do
+# Use this instead of rbenv_command, since this needs
+# to run during runtime
+execute "#{rbenv_bin_path}/rbenv global #{ruby_version}" do
   environment({ 'HOME' => '/home/vagrant', 'RBENV_ROOT' => rbenv_root })
 
   cwd    rbenv_root
   user   'rbenv'
   group  'rbenv'
 end
+
