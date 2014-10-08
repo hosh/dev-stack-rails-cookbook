@@ -29,6 +29,8 @@ include_recipe 'dev-stack-rails::libv8'
 rails_root        = node['dev-stack']['app']['root_dir']
 
 # bundle install
-rbenv_execute "bundle install" do
-  cwd rails_root
+with_home_for_user('vagrant') do
+  rbenv_execute "bundle install" do
+    cwd rails_root
+  end
 end
