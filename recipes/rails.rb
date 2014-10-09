@@ -27,10 +27,16 @@ include_recipe 'dev-stack-rails::ruby'
 include_recipe 'dev-stack-rails::libv8'
 
 rails_root        = node['dev-stack']['app']['root_dir']
+rbenv_root        = rbenv_root_path # Cache the DSL helper
 
 # bundle install
-with_home_for_user('vagrant') do
-  rbenv_execute "bundle install" do
-    cwd rails_root
-  end
+# Cannot use rbenv_execute here because it messes up the home paths and such
+execute "#{rbenv_bin_path}/rbenv exec bundle install" do
+  environment({ 'HOME' => '/home/vagrant', 'RBENV_ROOT' => rbenv_root })
+
+  cwd    rails_root
+  user   'vagrant'
+  group  'rbenv'
+
+  action :run
 end
