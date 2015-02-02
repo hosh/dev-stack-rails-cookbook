@@ -10,7 +10,7 @@ default['dev-stack']['nginx']['rails_upstream'] = 'localhost:3000'
 # the default.
 # default['dev-stack']['nginx']['rails_upstream'] = "unix:/vagrant/tmp/sockets/unicorn.sock"
 
-default['dev-stack']['rails']['version'] = '1.9.3-p547'
+default['dev-stack']['ruby']['version'] = '1.9.3-p547'
 
 # For building or caching datasets
 default['dev-stack']['cache_dir'] = '/vagrant/.vagrant/cache'

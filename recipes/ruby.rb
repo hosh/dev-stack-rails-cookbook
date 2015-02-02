@@ -26,7 +26,7 @@ Chef::Log.info "Setting up rbenv"
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 
-ruby_version      = node['dev-stack']['rails']['version']
+ruby_version      = node['dev-stack']['ruby']['version']
 ruby_cache_dir    = node['dev-stack']['cache_dir']
 ruby_cached_build = "#{ruby_cache_dir}/ruby-#{ruby_version}.tar.bz2"
 rbenv_root        = "#{node['rbenv']['install_prefix']}/rbenv"
@@ -60,7 +60,7 @@ else
     recursive true
   end
 
-  execute "tar -jcvpsf #{ruby_cached_build} --same-owner #{ruby_version}" do
+  execute "tar -jcvpf #{ruby_cached_build} --same-owner #{ruby_version}" do
     cwd   rbenv_versions
     user  'root'
     group 'root'
